@@ -1,0 +1,123 @@
+1. Locations = Posts     
+    
+    attributes:
+    user
+    category
+    title 
+    content 
+
+        all are strings 
+    rails g scaffold location title content user category
+
+2. Then: 
+rails db:create 
+rails db:migrate 
+
+3. Added gems:
+gem 'bcrypt', '~> 3.1.7'
+gem 'pry' 
+
+
+4. Created my db: 
+- Used locations attributes below:
+t.string :title
+t.string :content
+t.string :user
+t.string :category
+
+Locations.create(attribute: 'value')
+- to seed the above db => rails db:seed 
+
+5. Congifigure rails so that you can make a call from frontend making api accessible through react app: 
+- go to Gemfile, uncomment gem 'rack-core'
+- then run bundle update 
+
+6. go to initializer folder, cors.rb file 
+- uncomment Rails.application.
+- change origins '*' => the * means all, so that all Frontend calls can make a call to this Backend 
+
+7. create github repository MyWeather2 
+- make sure when you commit, do it from the main repo MyWeather2, not client or server side repos! 
+
+8. working on the Client_side now, stay on the client_side directory:  
+- npm i react-redux 
+
+@36:25, we started to setting redux store 
+
+9. start from index.js 
+
+- npm i redux-thunk 
+- npm i redux 
+- do 8 main imports =>  
+     React from 'react', 
+     ReactDom from 'react-dom', 
+     {createStore} from 'redux', 
+     {Provider} from 'react-redux', 
+     thunk from 'redux-thunk'
+     { composeWithDevTools } from 'redux-devtools-extension' => installation for this one is: 
+     npm i redux-devtools-extension
+     App from ''
+     rootReducer from ''
+
+@42:31, finished store setup 
+- now, we creating rootReducer, usersReducer, locationsReducer
+- the reducer needs to pass in 2 arguments; 1. state = [], 2. action 
+- inside the reducer we use Switch statement and it checks for (action.type)
+
+@42:52, we can't pass in multiple reducers to createStore, therefore, we need to combine our reducers into rootReducer, then, pass that bundle into createStore so it becomes aware of all our app state. 
+So, we created usersReducer and locationsReducer and we combined them in combineReducer at the rootReducer.js file. 
+
+@47:30, finished our reducers combining into rootReducer 
+- now, working on App.js - created a functional component, with <div> hello world - and check if its rendering anything on the client side?
+
+To run client side file: 
+=> npm start 
+
+* avoid setting the initial state to an object { } as that will show nesting when checking the redux state on inspection, instead, just do; state = []
+
+@50:30, we created LocationsContainer, this is a class component where all locations related data + methods - will be mounted in App.js 
+
+@52:57, we finished redux setup by finishing creating the: 
+1. index.js 
+2. reducers; rootReducer, locationsReducer, usersReducer
+3. components; App.js and LocationsContainer
+- The only thing left here, are the actions and the cases within the Switch statement 
+
+@52:29, we created LocationsActions 
+
+@58:23, make sure you stop and restart the rails server after making componentDidMount and adding this.props.fetchLocations to it. 
+
+@1:05:51, we finished LocationForm and mounted it on LocationContainer.js 
+
+@1:14:26, so far, we created; 
+1. the actions where its now give a GET and POST requests, 
+2. the reducers which are now handling the redux store, 
+3. we have 1 container; LocationsForm which is mounting the Locations container, and making a fetch request. 
+
+@1:15:40, Routing, we creating: 
+1. home page = root page 
+2. about page 
+3. index page = where you could go to and get all the locations 
+
+To setup routing, go to index.js 
+1. install react router dom 
+    => npm i react-router-dom 
+    
+2. import { BrowserRouter }
+
+Remember, new update for "react-router-dom": "^6.0.2", now:
+
+1. the import has to be: 
+        import { Routes ,Route } from 'react-router-dom'; 
+2. Switch is replaced with Route, 
+3. component is replaced by element, 
+4. {Home} is replaced by {<Home />}, 
+
+To start the app postgresql server: 
+sudo service postgresql start
+
+
+For Google OAuth authentication 
+1. npm install react-google-login 
+2. on App.js file, import GoogleLogin from 'react-google-login' 
+3. inside <div> <GoogleLogin/> </div>
