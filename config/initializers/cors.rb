@@ -7,10 +7,23 @@
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins '*' # the * means all, so that all Frontend calls can make a call to this Backend 
+    origins '*'
 
     resource '*',
       headers: :any,
       methods: [:get, :post, :put, :patch, :delete, :options, :head]
   end
 end
+
+# credentials: true => allows to pass the headers back to and forth and pass the cookie from your Frontend app to your Backend app. 
+
+# 'http://localhost:3001' # the * means all, so that all Frontend calls can make a call to this Backend 
+
+# allow do # this where you doing to put the domain that your production app is going to be on
+  #   origins 'http://weather-app-react.herokuapp.com'  
+
+  #   resource '*',
+  #     headers: :any,
+  #     methods: [:get, :post, :put, :patch, :delete, :options, :head], 
+  #     credentials: true   
+  # end

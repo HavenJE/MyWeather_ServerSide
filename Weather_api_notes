@@ -121,3 +121,202 @@ For Google OAuth authentication
 1. npm install react-google-login 
 2. on App.js file, import GoogleLogin from 'react-google-login' 
 3. inside <div> <GoogleLogin/> </div>
+
+For git commands to check: 
+check this website for best shell command: https://explainshell.com/explain?cmd=ls+-a 
+1. list all directory content 
+    => ls -a 
+2. remove all files and directories forcefully and unlink the files from git 
+    => rm -rf .git 
+3. forcefully remove node_modules 
+    => rm -rf node_modules
+
+Jennifer Hansen link - 5/4 FT Rails login with Google Oauth
+https://www.youtube.com/watch?v=9pD0uXLI5uE
+
+1. setting User for the Google Oauth - all attributes are 'strings'
+
+User 
+
+- Attributes: 
+username
+email 
+password_digest
+uid 
+provider
+
+
+  => rails g resource User username email password:digest uid provider 
+2. rails db:migrate 
+
+Gemfile - add few gems 
+1. gem 'bcrypt', '~> 3.1.7' - this is to use secure password system 
+2. gem 'omniauth' 
+3. gem 'omniauth-rails-csrf_protection' - this gem works with omniauth to make sure that we don't have the vulnerability in our code 
+4. gem 'omniauth-google-oauth2' 
+
+dotenv gem - this is to be put under group :development, :test do
+2. gem 'dotenv-rails' 
+
+*After adding all these gems do - bundle 
+
+env :
+1. create env file in the directory of server side:
+    => touch .env 
+2. In gitignore file, # Ignore uploaded files in development:
+    => add .env 
+This is to unsure that this file does not get pushed to github. 
+
+We added the GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET to the .env file. 
+
+We set the middleware which is going to contact Google for us:
+1. under config folder, initializer, add omniauth.rb file 
+2. added the code below: 
+
+Rails.application.config.middleware.use OmniAuth::Builder do
+    provider :google_oauth2, ENV['GOOGLE_CLIENT_ID'],
+    ENV['GOOGLE_CLIENT_SECRET']
+end 
+
+A fresh beginning with Ayson 
+https://www.youtube.com/watch?v=PBi877w8P44
+
+1. implement a sign up => responsibility of the users controller 
+2. a login and logout => we storing a new key-value pair inside of our existing sessions hash 
+
+The gem's installed for Rails authentication are: 
+gem 'bcrypt', '~> 3.1.7' # to authenticate and store encrypted version of user's password 
+gem 'pry' 
+
+Create sessions controller only with 3 actions (methods) new, create, and destroy:
+    => rails g resource controller Sessions new create destroy 
+
+For Rails API app, you need to add the below codes in the application.rb 
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore
+
+
+The above link is ideal for Backend authenticator 
+
+Frontend Google authenticator 
+https://www.youtube.com/watch?v=MqczHS3Z2bc 
+https://manage.auth0.com/dashboard/au/dev-js90blpn/applications/vjszO4ak3YgfgJrj1pRdSCZexUh0AedB/settings
+
+
+Frontend Auth0 authenticator 
+https://www.youtube.com/watch?v=GGGjnBkN8xk
+
+
+Rails.application.credentials.secret_key_base 
+
+
+https://www.youtube.com/watch?v=_rdNv5ijzrk&list=PLgYiyoyNPrv_yNp5Pzsx0A3gQ8-tfg66j&index=3
+
+curl --header "Content-Type: application/json" \
+--request POST --data '{"user": {"email": "swimhj_81@yahoo.com", "password": "Jeff@81"}}'\
+http://localhost:3000/sessions
+
+
+A fresh beginning with Ayson in Rails Authentication 
+https://www.youtube.com/watch?v=EUOLxgaxCu4
+
+
+# Albert JWT authentication: 
+
+# login or check the new user you just added: 
+
+fetch('http://localhost:3000/login', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json'
+  },
+  body: JSON.stringify({
+    user: {
+      email: "swimhj_81@yahoo.com",
+      password: "Jeff@1981"
+    }
+  })
+})
+  .then(r => r.json())
+  .then(r => {
+    console.log(r)
+    localStorage.setItem('user', r.user)
+    localStorage.setItem('jwt', r.jwt)
+  })
+
+
+
+  fetch('http://localhost:3000/login', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json'
+  },
+  body: JSON.stringify({
+    user: {
+      email: "swimhj_81@yahoo.com",
+      username: "Jeff",
+      password: "Jeff@1981"
+    }
+  })
+})
+  .then(r => r.json())
+  .then(r => console.log(r))
+
+  or in the last line, if you want to store that in the localStorage and console log:
+  => .then(r => {
+    console.log(r)
+    localStorage.setItem('user', JSON.stringify(r.user))
+    localStorage.setItem('jwt', r.jwt)
+  })
+
+# Below, we changed:
+1. login => locations - and 
+2. method: get instead of post 
+3. added, Authorization: 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxfQ.iYpgIJJsIa8qdQPkvPVxwZO6o6prN8i3vVW3glRLNR4' - after Accept: 
+
+
+fetch('http://localhost:3000/locations', {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+    Authorization: `Bearer ${localStorage.getItem('jwt')}`
+  }
+})
+  .then(r => r.json())
+  .then(r => {
+    console.log(r)
+  })
+
+  # to check your jwt on https://jwt.io/ website: 
+  1. put your jwt there - 
+  2. then add your secret key base on Rails c using: Rails.application.credentials.secret_key_base
+
+# to save the jwt on the browser: 
+  localStorage.setItem("JWT", "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxfQ.iYpgIJJsIa8qdQPkvPVxwZO6o6prN8i3vVW3glRLNR4")
+
+# to delete the jwt from the browser: 
+  localStorage.removeItem("JWT")
+
+To reset rails migration:
+=> rake db:migrate VERSION=0 
+
+Ruby on Rails queries 
+
+rails.console --sandbox 
+
+# to delete a record in rails console: 
+User.where(:attribute=>"value").first.delete
+Or 
+User.find(1).destroy 
+
+# Postgresql server issues can't run by using "sudo service postgresql start" - solution was restarting the server using:
+=> sudo service postgresql restart
+
+# if you changed your seeded data and wanted to reset the previous migrate and ended up with an error like the now below:
+StandardError: An error has occurred, this and all later migrations canceled:
+PG::DuplicateTable: ERROR:  relation "locations" already exists
+- The solution for the above is: 
+=> rake db:drop db:create db:migrate

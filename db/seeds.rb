@@ -8,7 +8,7 @@
 
 # t.string :title
 # t.string :content
-# t.string :user
+# t.string :username
 # t.string :category
 
 # Could add more:
@@ -17,6 +17,11 @@
 # t.integer :humidity
 # t.integer :wind
 
-Location.create(title: 'Oreilly', content: 'Oreilly is located on Queenslands border with New South Wales on the elevated Lamington Plateau. The plateau remains heavily vegetated by Gondwana Rainforests.', user: 'Haven', category: 'Light rain showers')
+# The bang operator ! is used after create! to avoid returning null if its not able to create a user, so it would instead, return an exception or an error. 
 
+# l1 = Location.create!(title: 'Oreilly', content: 'Oreilly is located on Queenslands border with New South Wales on the elevated Lamington Plateau. The plateau remains heavily vegetated by Gondwana Rainforests.', user_id: 'Jeff', category: 'Light rain showers')
+
+u1 = User.create!(username: 'Jeff', email: 'swimhj_81@yahoo.com', password: 'Jeff@1981')
+
+u1.locations.create!(title: 'Oreilly', content: 'Oreilly is located on Queenslands border with New South Wales on the elevated Lamington Plateau. The plateau remains heavily vegetated by Gondwana Rainforests.', category: 'Light rain showers')
 
